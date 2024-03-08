@@ -47,7 +47,40 @@ router.get('/:id', async (req, res, next) => {
   
 });
 
-router.patch('/:id');
+router.patch('/:id', async(req, res, next)=>{
+  try {
+    const id = req.params?.id;
+    const password = req.body?.password;
+    const email = req.body?.email;
+    /*
+      const updatedUser = await User.update(req.body, {
+      where: { id: userId },
+      // Solo actualizar los campos especificados en la solicitud
+      saltRounds=10;
+      if(req.body.password) await bcrypt.hash(req.body.password, saltRounds);
+      fields: ['name', 'email', 'password'],
+    });
+    if(updatedUser[0]===0){
+          return res.status(404).json({ message: 'User not found' });
+    }
+    */
+   res.send(`updated user: ${id} , ${password}, ${email}`)
+  } catch (error) {
+    next(error)
+  }
+});
+  //delete User
+  router.patch('/delete/:id', async(req, res, next)=>{
+    try {
+      const id = req.params.id;
+      /*const updateUSer = await User.delete({where: {id: userId}})
+      (updateUser[0]===0)?
+      res.status(404).json({message: 'user not found'}):*/
+      res.status(200).json({message: `user soft deleted sucessfully ${id}`})
+    } catch (error) {
+      next(error)
+    }
+  })
 
 
 
