@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const User = require('../models/user');
 
 
 
 // **Create User**
 router.post('/', async (req, res) => {
   try {
+    console.log(req.body)
     // Validate user data (e.g., username length, email format)
     if (!req.body.username || !req.body.email || !req.body.password) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -24,9 +26,12 @@ router.post('/', async (req, res) => {
     };
 
     // Insert user into database using secure methods (avoid SQL injection)
-    const createdUser = await User.create(newUser);
+    const user = new User(newUser)
+    user.save()
+    .then(() => console.log('Usuario creado'))
+    .catch(err => console.error(err));
 
-    res.status(201).json({ message: 'User created successfully', user: createdUser });
+    res.status(201).json({ message: 'User created successfully', newuser: user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
