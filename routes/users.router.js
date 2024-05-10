@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 
 
-// **Create User**
+//Create User
 router.post('/', async (req, res) => {
   try {
     console.log(req.body)
@@ -23,13 +23,14 @@ router.post('/', async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      status: 1
     };
 
     // Insert user into database using secure methods (avoid SQL injection)
     const user = new User(newUser)
     user.save()
-    .then(() => console.log('Usuario creado'))
-    .catch(err => console.error(err));
+      .then(() => console.log('Usuario creado'))
+      .catch(err => console.error(err));
 
     res.status(201).json({ message: 'User created successfully', newuser: user });
   } catch (error) {
@@ -39,54 +40,92 @@ router.post('/', async (req, res) => {
 });
 //get user
 router.get('/', async (req, res) => {
-  res.send('Hola Mundo!');
+  try {
+    const users = await User.find({ status: 1 });
+    res.status(200).json(users)
+  } catch (err) {
+    console.error(err)
+    res.status(400).json({ message: 'internal error' });
+  }
 });
-
+//get all user + deleted 
+router.get('/audit/', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users)
+  } catch (err) {
+    console.error(err)
+    res.status(400).json({ message: 'internal error' });
+  }
+});
+//get user by id
 router.get('/:id', async (req, res, next) => {
   try {
-    const id = req.params.id
-    res.send(id);
-  } catch (error) {
-    next(error)
-  }
-  
-});
+    const id = req.params.id;
+    const userById = await User.findById(id);
 
-router.patch('/:id', async(req, res, next)=>{
+    // Handle case where user is not found
+    if (!userById) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(userById);
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({ message: ' internal error' })
+  }
+
+});
+//update user
+router.patch('/:id', async (req, res, next) => {
   try {
-    const id = req.params?.id;
-    const password = req.body?.password;
-    const email = req.body?.email;
-    /*
-      const updatedUser = await User.update(req.body, {
-      where: { id: userId },
-      // Solo actualizar los campos especificados en la solicitud
-      saltRounds=10;
-      if(req.body.password) await bcrypt.hash(req.body.password, saltRounds);
-      fields: ['name', 'email', 'password'],
-    });
-    if(updatedUser[0]===0){
-          return res.status(404).json({ message: 'User not found' });
+    const id = req.params.id;
+    const updatedUserData = req.body; // Contiene los datos actualizados
+
+    // Validar datos actualizados (opcional)
+    // Implementar validación para garantizar la integridad de los datos
+
+    const userById = await User.findByIdAndUpdate(id, updatedUserData, { new: true }); // Actualizar y obtener usuario actualizado
+
+    // Manejar caso donde no se encuentre el usuario
+    if (!userById) {
+      return res.status(404).json({ message: 'User not found' });
     }
-    */
-   res.send(`updated user: ${id} , ${password}, ${email}`)
+
+    res.status(200).json(userById);
   } catch (error) {
     next(error)
   }
 });
-  //delete User
-  router.patch('/delete/:id', async(req, res, next)=>{
-    try {
-      const id = req.params.id;
-      /*const updateUSer = await User.delete({where: {id: userId}})
-      (updateUser[0]===0)?
-      res.status(404).json({message: 'user not found'}):*/
-      res.status(200).json({message: `user soft deleted sucessfully ${id}`})
-    } catch (error) {
-      next(error)
-    }
-  })
+//soft delete User
+router.put('/delete/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
 
+    const updateUSer = await User.findByIdAndUpdate(id, { status: 0 }, { new: true })
+    if (!userById) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: `user soft deleted sucessfully ${updateUSer}` })
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'internal error' })
+  }
+})
+//hard delete users
+router.delete('/delete/hard/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const deleteUser = await User.findByIdAndDelete(id)
+    if (!deleteUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: `user hard deleted sucessfully` })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'user cant not be deleted' })
+  }
+})
 
 
 module.exports = router;

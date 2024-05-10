@@ -10,8 +10,6 @@ app.use(bodyParser.json()); // For JSON bodies
 
 
 mongoose.connect('mongodb://root:password@localhost:27017/', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
 })
 .then(() => console.log('Conectado a la base de datos'))
 .catch(err => console.error(err));
