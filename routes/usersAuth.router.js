@@ -4,8 +4,8 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const secretKey = 'miClaveSecreta'; 
 const bcrypt = require('bcrypt');
-
-//Login
+//asd
+//Loging 
 router.post('/', async (req, res)=> {
     const { email, password } = req.body;
 
