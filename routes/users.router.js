@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-
+const authMiddleware = require('../middleware/middlewareAuthentication');
 
 
 //Create User
@@ -23,6 +23,7 @@ router.post('/', async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      rol: 'user',
       status: 1
     };
 
@@ -59,7 +60,7 @@ router.get('/audit/', async (req, res) => {
   }
 });
 //get user by id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authMiddleware, async (req, res, next) => {
   try {
     const id = req.params.id;
     const userById = await User.findById(id);
