@@ -13,8 +13,12 @@ const roles = {
 };
 
 const userSchema = new mongoose.Schema({
+  name : String,
   username: String,
   email: String,
+  birthdate: Date,
+  age : Number,
+  phone : Number,
   password: String,
   rol: {
     type: String,

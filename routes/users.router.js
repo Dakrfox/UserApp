@@ -20,8 +20,12 @@ router.post('/', async (req, res) => {
 
     // Create user object with secure password
     const newUser = {
+      name: req.body.name,
       username: req.body.username,
       email: req.body.email,
+      birthdate: req.body.birthdate,
+      age: req.body.age,
+      phone: req.body.phone,
       password: hashedPassword,
       rol: 'user',
       status: 1
