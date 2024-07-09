@@ -17,7 +17,7 @@ router.post('/', async (req, res)=> {
     try {
       // Buscar usuario por nombre de usuario
       const user = await User.findOne({ email });
-      if (!user) {
+      if (!user || user.status === 0) {
         return res.status(401).json({ message: 'wrong email and/or password' });
       }
   

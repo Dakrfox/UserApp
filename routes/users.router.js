@@ -70,7 +70,7 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
     const userById = await User.findById(id);
 
     // Handle case where user is not found
-    if (!userById) {
+    if (!userById || userById.status === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -112,7 +112,7 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 //soft delete User
-router.put("/delete/:id", async (req, res, next) => {
+router.patch("/delete/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
 
@@ -121,7 +121,7 @@ router.put("/delete/:id", async (req, res, next) => {
       { status: 0 },
       { new: true }
     );
-    if (!userById) {
+    if (!updateUSer) {
       return res.status(404).json({ message: "User not found" });
     }
     res
