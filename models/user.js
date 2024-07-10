@@ -25,6 +25,8 @@ const userSchema = new mongoose.Schema({
     enum: Object.keys(roles),
     default: 'user',
   },
+  created_at: Date,
+  updated_at: Date,
   status: Number,
 });
 

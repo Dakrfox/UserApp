@@ -27,7 +27,7 @@ router.post('/', async (req, res)=> {
         return res.status(401).json({ message: 'wrong email and/or password' });
       }
       // Generar token JWT
-      const token = jwt.sign({ userId: user._id }, secretKey);
+      const token = jwt.sign({ userId: user._id, TimeStamp: Date.now() }, secretKey);
   
       res.json({ message: 'Inicio de sesión exitoso', token });
     } catch (error) {

@@ -27,6 +27,8 @@ router.post("/", async (req, res) => {
       phone: req.body.phone,
       password: hashedPassword,
       rol: "user",
+      created_at: Date.now(),
+      updated_at: Date.now(),
       status: 1,
     };
 
@@ -97,7 +99,7 @@ router.patch("/:id", async (req, res, next) => {
     // Validar datos actualizados (opcional)
     // Implementar validación para garantizar la integridad de los datos
 
-    const userById = await User.findByIdAndUpdate(id, updatedUserData, {
+    const userById = await User.findByIdAndUpdate(id, { ...updatedUserData , updated_at: Date.now()}, {
       new: true,
     }); // Actualizar y obtener usuario actualizado
 
