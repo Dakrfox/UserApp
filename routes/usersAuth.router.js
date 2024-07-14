@@ -28,7 +28,7 @@ router.post('/', async (req, res)=> {
       }
       // Generar token JWT
       const token = jwt.sign({ userId: user._id, TimeStamp: Date.now() }, secretKey);
-  
+
       res.json({ message: 'Inicio de sesión exitoso', token });
     } catch (error) {
       console.error(error);
