@@ -10,7 +10,6 @@ require('dotenv').config();
 const app = express();
 app.use(bodyParser.json()); // For JSON bodies
 
-
 mongoose.connect('mongodb://root:password@localhost:27017/', {
 })
 .then(() => console.log('Conectado a la base de datos'))
