@@ -4,6 +4,7 @@ const routerApi = require('./routes/index');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config();
 
 // Creamos una aplicación Express
 const app = express();
