@@ -7,7 +7,6 @@ const authMiddleware = require("../middleware/middlewareAuthentication");
 //Create User
 router.post("/", async (req, res) => {
   try {
-    console.log(req.body);
     // Validate user data (e.g., username length, email format)
     if (!req.body.username || !req.body.email || !req.body.password) {
       return res.status(400).json({ message: "Missing required fields" });
